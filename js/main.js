@@ -234,7 +234,8 @@ const createLinkTemplate = () =>
         routing: go.Routing.Orthogonal,
         layerName: 'Background',
         mouseEnter: onMouseEnterPart,
-        mouseLeave: onMouseLeavePart
+        mouseLeave: onMouseLeavePart,
+        movable: false,
     })
         .add(
             new go.Shape({
