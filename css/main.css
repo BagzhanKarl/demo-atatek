@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+body{
+    color: #2c2c2c;
+}
+.auth_block{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 85vh;
+    justify-content: center;
+}
+.auth_img{
+    width: 50%;
+}
+.auth_form{
+    width: 35%;
+    text-align: center;
+}
+.abm-standart{
+    margin-bottom: 24px;
+}
+.a-link{
+    color: #A8D07A;
+    text-decoration: none;
+}
+.form-check-input:checked {
+    background-color: #A8D07A;
+    border-color: #A8D07A;
+}
+.btn{
+    border-radius: 10px;
+    background-color: #A8D07A;
+    border-color: #A8D07A;
+    font-weight: 700;
+    font-size: 18px;
+}
+.btn {
+    border-radius: 10px;
+    background-color: #A8D07A;
+    border-color: #A8D07A;
+    font-weight: 700;
+    font-size: 18px;
+}
+.btn:hover,
+.btn:focus,
+.btn:active {
+    background-color: #a2ce6f;
+    border-color: #a2ce6f;
+    box-shadow: none; /* Убираем стандартную тень при клике */
+}
+.loader{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.76);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.atatek-color{
+    color: #A8D07A;
+}

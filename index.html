@@ -6,12 +6,25 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .samplepage {
+            background-color: white;
+            width: 100%;
+            height: 100vh;
+            -ms-overflow-style: none; /* IE и Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        .samplepage::-webkit-scrollbar {
+            display: none; /* Chrome, Safari и Opera */
+        }
+    </style>
 </head>
 <body>
 <div id="sample">
-    <div id="myDiagramDiv" style="background-color: white; border: solid 1px black; width: 100%; height: 550px"></div>
+    <div id="myDiagramDiv" class="samplepage"></div>
 </div>
-<script src="js/go.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/3.0.10/go.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
