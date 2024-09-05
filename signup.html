@@ -8,7 +8,7 @@
     <title>Atateл || Кіру</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="sweetalert2.min.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="auth/main.css">
 </head>
 <body>
 <div class="container">
@@ -17,7 +17,8 @@
             <img src="images/image%201.png" width="502" alt="">
         </div>
         <div class="auth_form">
-            <form action="">
+            <div
+            >
                 <h3 class="logo mb-4">Ататек</h3>
                 <h2 class="mb-4">Тіркелу</h2>
                 <div class="row abm-standart">
@@ -27,7 +28,6 @@
                     <div class="col">
                         <input type="text" autocomplete="off" id="surname" placeholder="Тегіңіз" class="form-control">
                     </div>
-
                 </div>
                 <div class="abm-standart">
                     <input type="text" autocomplete="off" id="phone" placeholder="+7 777 777 77 77" class="form-control">
@@ -38,19 +38,15 @@
                 <div class="abm-standart">
                     <input type="text" autocomplete="off" id="address" placeholder="Мекен-жайыңыз" class="form-control">
                 </div>
-
                 <div>
-                    <button class="btn btn-primary w-100">Жалғастыру</button>
+                    <button id="registerBtn" class="btn btn-primary w-100">Жалғастыру</button>
                 </div>
                 <div class="d-flex justify-content-between mt-4">
-                    <div>
-                        Аккаунтыңыз бар ма?
-                    </div>
-                    <div>
-                        <a href="" class="a-link">Жүйеге кіру</a>
-                    </div>
+                    <div>Аккаунтыңыз бар ма?</div>
+                    <div><a href="" class="a-link">Жүйеге кіру</a></div>
                 </div>
-            </form>
+            </div>
+
         </div>
     </div>
     <div class="loader" id="loader">
