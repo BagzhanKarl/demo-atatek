@@ -62,3 +62,10 @@ body{
 .atatek-color{
     color: #A8D07A;
 }
+.disabled{
+    color: rgba(168, 208, 122, 0.55);
+    cursor: not-allowed;
+}
+.resend{
+    cursor: pointer;
+}

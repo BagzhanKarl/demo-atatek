@@ -5,6 +5,21 @@ $data = $_POST;
 $errors = [];
 $error = '';
 
+if(isset($data['signup'])){
+    $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
+    $user->persontype = $data['type'];
+    $user->updated_at = time();
+    R::store($user);
+
+    $verify = R::dispense('verify');
+    $verify->user = $user;
+    $verify->code = rand(100000, 999999);
+    $verify->time = time() + 360;
+    R::store($verify);
+
+    header('Location: ../confirm');
+}
+
 ?>
 <!doctype html>
 <html lang="ru">
@@ -40,32 +55,26 @@ $error = '';
                         </select>
                     </div>
                     <div class="col">
-                        <select name="" id="step2" class="form-control">
-
-                        </select>
+                        <select name="" id="step2" class="form-control"></select>
                     </div>
                 </div>
                 <div class="abm-standart">
-                    <select name="" id="step3" class="form-control">
-
-                    </select>
+                    <select name="" id="step3" class="form-control"></select>
                 </div>
                 <div class="abm-standart">
-                    <input type="password" autocomplete="off" name="password" required placeholder="Құпия сөз" class="form-control">
-                </div>
-                <div class="abm-standart">
-                    <input type="password" autocomplete="off" name="confirm_password" required placeholder="Құпия сөзді қайталаңыз" class="form-control">
+                    <select name="type" id="step4" class="form-control"></select>
                 </div>
                 <div>
                     <button name="signup" class="btn btn-primary w-100">Жалғастыру</button>
                 </div>
-                <div class="d-flex justify-content-between mt-4">
-                    <div>Аккаунтыңыз бар ма?</div>
-                    <div><a href="../login" class="a-link">Жүйеге кіру</a></div>
-                </div>
-            </form>
 
+            </form>
         </div>
+    </div>
+</div>
+<div class="loader" id="loader">
+    <div class="spinner-border atatek-color" role="status">
+        <span class="visually-hidden">Loading...</span>
     </div>
 </div>
 
@@ -75,7 +84,11 @@ $error = '';
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script !src="">
     $(document).ready(function (){
+        $(document).ready(function(){
+            $('#loader').hide();
+        })
         $('#step1').on('change', function(){
+            $('#loader').show();
             $.ajax({
                 url: '../../php/api/step1.php',
                 method: 'POST',
@@ -85,10 +98,12 @@ $error = '';
                 success: function(options){
                     $('#step2').html('');
                     $('#step2').html(options);
+                    $('#loader').hide();
                 }
             })
         })
         $('#step2').on('change', function(){
+            $('#loader').show();
             $.ajax({
                 url: '../../php/api/step2.php',
                 method: 'POST',
@@ -98,6 +113,22 @@ $error = '';
                 success: function(options){
                     $('#step3').html('');
                     $('#step3').html(options);
+                    $('#loader').hide();
+                }
+            })
+        })
+        $('#step3').on('change', function(){
+            $('#loader').show();
+            $.ajax({
+                url: '../../php/api/step3.php',
+                method: 'POST',
+                data: {
+                    id: $(this).val()
+                },
+                success: function(options){
+                    $('#step4').html('');
+                    $('#step4').html(options);
+                    $('#loader').hide();
                 }
             })
         })

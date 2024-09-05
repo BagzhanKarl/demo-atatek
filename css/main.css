@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+.header{
+    width: 100%;
+    max-width: 90%;
+    margin: 0 auto;
+
+    height: 74px;
+    background: #A8D07A;
+    margin-top: 35px;
+    border-radius: 20px;
+
+    display: flex;
+    align-items: center;
+
+    -webkit-box-shadow: 0px 4px 4px 0px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 0px 4px 4px 0px rgba(34, 60, 80, 0.2);
+    box-shadow: 0px 4px 4px 0px rgba(34, 60, 80, 0.2);
+    z-index: 1000;
+}
+.head-cont{
+    position: fixed;
+    background: white;
+    z-index: 999;
+    width: 100%;
+}
+.header-container{
+    width: 100%;
+    max-width: 95%;
+    margin: 0 auto;
+    color: white;
+}
+.brand{
+    font-weight: 700;
+    font-size: 23px;
+}
+.nav_links{
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all .8s;
+}
+.nav_links.active, .nav_links:hover{
+    border-bottom: 1px solid white;
+}
+.sample{
+    z-index: 1;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+}
+.samplepage {
+    background-color: white;
+    width: 100%;
+    height: 100vh;
+    -ms-overflow-style: none; /* IE и Edge */
+    scrollbar-width: none; /* Firefox */
+}
+.samplepage::-webkit-scrollbar {
+    display: none; /* Chrome, Safari и Opera */
+}

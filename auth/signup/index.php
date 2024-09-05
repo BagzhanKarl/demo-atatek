@@ -24,17 +24,16 @@ if(isset($data['signup'])){
         $user->password = password_hash($data['password'], PASSWORD_DEFAULT);
         $user->name = $data['name'];
         $user->surname = $data['surname'];
+        $user->address = $data['address'];
+
         $user->admin = false;
         $user->verify = false;
         $user->active = true;
+        $user->step1 = true;
+        $user->step2 = false;
+        $user->step3 = false;
 
         R::store($user);
-
-        $verify = R::dispense('verify');
-        $verify->user = $user;
-        $verify->code = rand(100000, 999999);
-        $verify->time = time() + 30;
-        R::store($verify);
 
         $_SESSION['user_id'] = $user->id;
         header('Location: ../next');
@@ -75,7 +74,10 @@ if(isset($data['signup'])){
                     </div>
                 </div>
                 <div class="abm-standart">
-                    <input type="text" autocomplete="off" name="phone" id="phone-mask" required placeholder="+7 777 777 77 77" class="form-control">
+                    <input type="text" autocomplete="off" name="phone" id="phone-mask" required value="+7" placeholder="+7 777 777 77 77" class="form-control">
+                </div>
+                <div class="abm-standart">
+                    <input type="text" autocomplete="off" name="address" required placeholder="Мекен жайыңыз" class="form-control">
                 </div>
                 <div class="abm-standart">
                     <input type="password" autocomplete="off" name="password" required placeholder="Құпия сөз" class="form-control">
