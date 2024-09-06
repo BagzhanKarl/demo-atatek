@@ -44,21 +44,34 @@ function strokeStyle(shape) {return shape
 const genderToText = (gender) => (gender === 'M' ? 'Ақпарат' : 'Ақпарат');
 const genderToTextColor = (gender) => gender === 'M' ? theme.colors.maleBadgeText : theme.colors.femaleBadgeText;
 const genderToFillColor = (gender) => gender === 'M' ? theme.colors.maleBadgeBackground : theme.colors.femaleBadgeBackground;
-const personBadge = () => new go.Panel('Auto',
-    {
-        alignmentFocus: go.Spot.TopRight,
-        alignment: new go.Spot(1, 0, -25, STROKE_WIDTH - 0.5)
-    }).add(new go.Shape({
-        figure: 'RoundedRectangle', parameter1: CORNER_ROUNDNESS,
-        parameter2: 4 | 8,
-        desiredSize: new go.Size(NaN, 23.5),
-        stroke: null
-    }).bind('fill', genderProperty, genderToFillColor),
+const personBadge = () => {
+    // Создаем панель значка
+    const badge = new go.Panel('Auto',
+        {
+            alignmentFocus: go.Spot.TopRight,
+            alignment: new go.Spot(1, 0, -25, STROKE_WIDTH - 0.5),
+            visible: false  // Сначала скрыто
+        }).add(new go.Shape({
+            figure: 'RoundedRectangle', parameter1: CORNER_ROUNDNESS,
+            desiredSize: new go.Size(NaN, 23.5),
+            stroke: null
+        }).bind('fill', genderProperty, genderToFillColor),
         new go.TextBlock({
             font: theme.fonts.badgeFont
         }).bind('stroke', genderProperty, genderToTextColor)
             .bind('text', genderProperty, genderToText)
-    )
+    );
+
+    // Обработчик клика на значке
+    badge.mouseEnter = onMouseEnterPart;
+    badge.mouseLeave = onMouseLeavePart;
+    badge.click = (e, obj) => {
+        data(obj.part.data.id)
+        e.handled = true;
+    };
+
+    return badge;
+};
 const personBirthDeathTextBlock = () => new go.TextBlock(
     {
         stroke: theme.colors.personText,
@@ -109,11 +122,7 @@ const createNodeTemplate = () => new go.Node('Spot',
         personMainShape(),
         personNameTextBlock(),
         personBirthDeathTextBlock()),
-        personBadge().bind('visible', 'info', (info) => info === 'have').set({
-            click: (e, obj) => {
-                e.handled = true;
-            }
-        })
+        personBadge().bind('visible', 'info', (info) => info === 'have')
 
     );
 async function fetchAndAddFamilyData(id) {
