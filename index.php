@@ -72,7 +72,7 @@ $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
             console.log(data);
         }
     </script>
-    <script src="js/main.js?v=3"></script>
+    <script src="js/main.js?v=4"></script>
 
 </body>
 </html>

@@ -5,17 +5,12 @@ const statusProperty = 'status';
 const theme = {
     colors: {
         maleBadgeBackground: '#A8D07A',
-        femaleBadgeText: '#A8D07A',
         maleBadgeText: '#000000',
-        princePrincessBorder: '#343434',
-        civilianBorder: '#58ADA7',
-        personText: '#383838',
+        princePrincessBorder: '#666666',
+        civilianBorder: '#666666',
+        personText: '#666666',
         personNodeBackground: 'rgba(168,208,122,0.25)',
-        selectionStroke: '#383838',
-        counterBackground: '#383838',
-        counterBorder: '#383838',
-        counterText: '#383838',
-        link: '#383838'
+        link: '#666666'
     },
     fonts: {
         badgeFont: 'bold 8px Montserrat',
@@ -33,14 +28,18 @@ const onSelectionChange = (part) => {
 const STROKE_WIDTH = 1;
 const CORNER_ROUNDNESS = 18;
 
-function strokeStyle(shape) {return shape
+function strokeStyle(shape) {
+    return shape
         .set({
             fill: theme.colors.personNodeBackground,
             strokeWidth: STROKE_WIDTH
         })
-        .bind('stroke', statusProperty,  theme.colors.princePrincessBorder)
-        .bind('fill', theme.colors.princeBackgrount)
+        .bind('stroke', statusProperty, (status) => {
+            return status === 'king' ? theme.colors.princePrincessBorder : theme.colors.civilianBorder;
+        })
+        .bind('fill', theme.colors.personNodeBackground);  // Устанавливаем цвет фона
 }
+
 const genderToText = (gender) => (gender === 'M' ? 'Ақпарат' : 'Ақпарат');
 const genderToTextColor = (gender) => gender === 'M' ? theme.colors.maleBadgeText : theme.colors.femaleBadgeText;
 const genderToFillColor = (gender) => gender === 'M' ? theme.colors.maleBadgeBackground : theme.colors.femaleBadgeBackground;
@@ -163,6 +162,7 @@ const createLinkTemplate = () => new go.Link({
         mouseEnter: onMouseEnterPart,
         mouseLeave: onMouseLeavePart
     }).add(new go.Shape({
+            figure: 'RoundedRectangle', parameter1: CORNER_ROUNDNESS,
             stroke: theme.colors.link,
             strokeWidth: 1
         }));
@@ -189,13 +189,9 @@ const initDiagram = (divId) => {
 
     diagram.nodeTemplate = createNodeTemplate();
     diagram.model.nodeDataArray = familyData;
-
-    diagram.addDiagramListener('InitialLayoutCompleted', () => {
-        const root = diagram.findNodeForKey(14);
-        if (!root) return;
-        diagram.scale = 0.7;
-        diagram.scrollToRect(root.actualBounds);
-    });
+    const root = diagram.findNodeForKey(14);
+    diagram.scale = 0.75;
+    diagram.scrollToRect(root.actualBounds);
 
 };
 const familyData = [
