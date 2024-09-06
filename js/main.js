@@ -20,7 +20,7 @@ const theme = {
     fonts: {
         badgeFont: 'bold 8px Montserrat',
         birthDeathFont: '10px Montserrat',
-        nameFont: '700 12px Montserrat',
+        nameFont: '800 13px Montserrat',
     }
 };
 const onMouseEnterPart = (e, part) => part.isHighlighted = true;
@@ -31,10 +31,9 @@ const onSelectionChange = (part) => {
     part.isHighlighted = part.isSelected;
 }
 const STROKE_WIDTH = 1;
-const CORNER_ROUNDNESS = 13;
+const CORNER_ROUNDNESS = 18;
 
-function strokeStyle(shape) {
-    return shape
+function strokeStyle(shape) {return shape
         .set({
             fill: theme.colors.personNodeBackground,
             strokeWidth: STROKE_WIDTH
@@ -43,23 +42,25 @@ function strokeStyle(shape) {
         .bind('fill', theme.colors.princeBackgrount)
 }
 const genderToText = (gender) => (gender === 'M' ? 'Ақпарат' : 'Ақпарат');
-const genderToTextColor = (gender) =>
-    gender === 'M' ? theme.colors.maleBadgeText : theme.colors.femaleBadgeText;
-const genderToFillColor = (gender) =>
-    gender === 'M' ? theme.colors.maleBadgeBackground : theme.colors.femaleBadgeBackground;
-const personBadge = () =>
-    new go.Panel('Auto', {alignmentFocus: go.Spot.TopRight, alignment: new go.Spot(1, 0, -25, STROKE_WIDTH - 0.5)})
-        .add(new go.Shape({figure: 'RoundedRectangle', parameter1: CORNER_ROUNDNESS,
-            parameter2: 4 | 8,
-            desiredSize: new go.Size(NaN, 22.5),
-            stroke: null
-        }).bind('fill', genderProperty, genderToFillColor),
-            new go.TextBlock({
+const genderToTextColor = (gender) => gender === 'M' ? theme.colors.maleBadgeText : theme.colors.femaleBadgeText;
+const genderToFillColor = (gender) => gender === 'M' ? theme.colors.maleBadgeBackground : theme.colors.femaleBadgeBackground;
+const personBadge = () => new go.Panel('Auto',
+    {
+        alignmentFocus: go.Spot.TopRight,
+        alignment: new go.Spot(1, 0, -25, STROKE_WIDTH - 0.5)
+    }).add(new go.Shape({
+        figure: 'RoundedRectangle', parameter1: CORNER_ROUNDNESS,
+        parameter2: 4 | 8,
+        desiredSize: new go.Size(NaN, 23.5),
+        stroke: null
+    }).bind('fill', genderProperty, genderToFillColor),
+        new go.TextBlock({
             font: theme.fonts.badgeFont
-        }).bind('stroke', genderProperty, genderToTextColor).bind('text', genderProperty, genderToText)
+        }).bind('stroke', genderProperty, genderToTextColor)
+            .bind('text', genderProperty, genderToText)
     )
-const personBirthDeathTextBlock = () =>
-    new go.TextBlock({
+const personBirthDeathTextBlock = () => new go.TextBlock(
+    {
         stroke: theme.colors.personText,
         font: theme.fonts.birthDeathFont,
         alignmentFocus: go.Spot.Top,
@@ -67,16 +68,13 @@ const personBirthDeathTextBlock = () =>
     }).bind('text', '', ({born, death}) => {
         if (!born) return ''; return `${born} - ${death ?? ''}`;
     })
-const personMainShape = () =>
-    new go.Shape({
+const personMainShape = () => new go.Shape({
         figure: 'RoundedRectangle',
         desiredSize: new go.Size(150, 65),
         portId: '',
         parameter1: CORNER_ROUNDNESS
     }).apply(strokeStyle);
-
-const personNameTextBlock = () =>
-    new go.TextBlock({
+const personNameTextBlock = () => new go.TextBlock({
         stroke: theme.colors.personText,
         font: theme.fonts.nameFont,
         desiredSize: new go.Size(145, 55),
@@ -87,8 +85,8 @@ const personNameTextBlock = () =>
         alignmentFocus: go.Spot.Top,
         alignment: new go.Spot(0.5, -0.29, 0, 25)
     }).bind('text', nameProperty)
-const createNodeTemplate = () =>
-    new go.Node('Spot', {
+const createNodeTemplate = () => new go.Node('Spot',
+    {
         selectionAdorned: false,
         mouseEnter: onMouseEnterPart,
         mouseLeave: onMouseLeavePart,
@@ -107,16 +105,17 @@ const createNodeTemplate = () =>
                 }
             }
         }
-    }).add(new go.Panel('Spot').add(personMainShape(), personNameTextBlock(), personBirthDeathTextBlock()),
-        personBadge().set({
+    }).add(new go.Panel('Spot').add(
+        personMainShape(),
+        personNameTextBlock(),
+        personBirthDeathTextBlock()),
+        personBadge().bind('visible', 'info', (info) => info === 'have').set({
             click: (e, obj) => {
-                console.log(`Клик по значку: ${obj.part.data.id}`);
                 e.handled = true;
             }
-        }),
-    );
+        })
 
-// В fetchAndAddFamilyData добавим await в return, чтобы click ждал окончания
+    );
 async function fetchAndAddFamilyData(id) {
     try {
         const response = await fetch(`http://api.atatek.com/tree/get_items.php?id=${id}`);
@@ -132,7 +131,8 @@ async function fetchAndAddFamilyData(id) {
                     status: 'status',
                     born: member.birth_year,
                     death: member.death_year,
-                    parent: parseInt(member.parent_id)
+                    parent: parseInt(member.parent_id),
+                    info: member.info
                 }))
                 .filter(member => !existingIds.has(member.id));
 
@@ -147,20 +147,16 @@ async function fetchAndAddFamilyData(id) {
         console.error('Fetch error:', error);
     }
 }
-
-const createLinkTemplate = () =>
-    new go.Link({
+const createLinkTemplate = () => new go.Link({
         selectionAdorned: false,
         routing: go.Routing.Orthogonal,
         layerName: 'Background',
         mouseEnter: onMouseEnterPart,
         mouseLeave: onMouseLeavePart
-    })
-        .add(new go.Shape({
-                stroke: theme.colors.link,
-                strokeWidth: 1
-            })
-        );
+    }).add(new go.Shape({
+            stroke: theme.colors.link,
+            strokeWidth: 1
+        }));
 let diagram;
 const initDiagram = (divId) => {
     diagram = new go.Diagram(divId, {
@@ -194,11 +190,11 @@ const initDiagram = (divId) => {
 
 };
 const familyData = [
-    { id: 14, name: 'Алаш', gender: 'M', status: 'king', born: null, death: null,},
-    { id: 1, name: 'Ұлы жүз', gender: 'M', status: 'king', born: null, death: null, parent: 14 },
-    { id: 2, name: 'Орта жүз', gender: 'M', status: 'king', born: null, death: null, parent: 14 },
-    { id: 3, name: 'Кіші жүз', gender: 'M', status: 'king', born: null, death: null, parent: 14 },
-    { id: 4, name: 'Жүзден тыс', gender: 'M', status: 'king', born: null, death: null, parent: 14 },
+    { id: 14, name: 'Алаш', gender: 'M', status: 'king', born: null, death: null, info: 'have'},
+    { id: 1, name: 'Ұлы жүз', gender: 'M', status: 'king', born: null, death: null, parent: 14, info: null },
+    { id: 2, name: 'Орта жүз', gender: 'M', status: 'king', born: null, death: null, parent: 14, info: null },
+    { id: 3, name: 'Кіші жүз', gender: 'M', status: 'king', born: null, death: null, parent: 14, info: null },
+    { id: 4, name: 'Жүзден тыс', gender: 'M', status: 'king', born: null, death: null, parent: 14, info: null },
 
 ];
 window.addEventListener('DOMContentLoaded', () => {
