@@ -27,7 +27,9 @@ $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
                         <a href="" class="nav_links">Статистика</a>
                     </div>
                     <div class="ms-auto p-2">
-                        <img src="images/image%202.png" width="62" alt="">
+                        <a href="profile.php">
+                            <img src="images/avatar.png" width="55" alt="">
+                        </a>
                     </div>
                 </div>
             </div>

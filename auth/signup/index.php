@@ -24,14 +24,11 @@ if(isset($data['signup'])){
         $user->password = password_hash($data['password'], PASSWORD_DEFAULT);
         $user->name = $data['name'];
         $user->surname = $data['surname'];
-        $user->address = $data['address'];
 
         $user->admin = false;
         $user->verify = false;
         $user->active = true;
-        $user->step1 = true;
-        $user->step2 = false;
-        $user->step3 = false;
+        $user->newuser = true;
 
         R::store($user);
 
@@ -76,9 +73,7 @@ if(isset($data['signup'])){
                 <div class="abm-standart">
                     <input type="text" autocomplete="off" name="phone" id="phone-mask" required value="+7" placeholder="+7 777 777 77 77" class="form-control">
                 </div>
-                <div class="abm-standart">
-                    <input type="text" autocomplete="off" name="address" required placeholder="Мекен жайыңыз" class="form-control">
-                </div>
+
                 <div class="abm-standart">
                     <input type="password" autocomplete="off" name="password" required placeholder="Құпия сөз" class="form-control">
                 </div>

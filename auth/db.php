@@ -1,6 +1,6 @@
 <?php
 require "db/rb-mysql.php";
-R::setup( 'mysql:host=192.168.1.108;dbname=atatek',
+R::setup( 'mysql:host=localhost;dbname=atatek',
     'root', '' );
 session_start();
 

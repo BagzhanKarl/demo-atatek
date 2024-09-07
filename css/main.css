@@ -79,7 +79,9 @@
     font-size: 24px;
     font-weight: 700;
 }
-
+.btn{
+    border-radius: 10px;
+}
 .btn-success {
     border-radius: 10px;
     background-color: #A8D07A;
@@ -104,6 +106,64 @@
 .btn-outline-success:hover,
 .btn-outline-success:focus,
 .btn-outline-success:active {
-    border-color: #a2ce6f;
+    border-color: #556080;
     box-shadow: none; /* Убираем стандартную тень при клике */
+}
+
+.btn-secondary {
+    border-radius: 10px;
+    border-color: #556080;
+    background: #556080;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+}
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+    background: #4d5773;
+    border-color: #556080;
+    box-shadow: none; /* Убираем стандартную тень при клике */
+}
+
+
+.card{
+    -webkit-box-shadow: 0px 4px 4px 0px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 0px 4px 4px 0px rgba(34, 60, 80, 0.2);
+    box-shadow: 0px 4px 4px 0px rgba(34, 60, 80, 0.2);
+
+    border-radius: 20px;
+    margin-bottom: 24px;
+}
+
+.profile-nav-links{
+    text-decoration: none;
+    color: black;
+    font-size: 14px;
+    font-weight: 500;
+    padding-left: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(162, 206, 111, 0.43);
+    padding-top: 10px;
+    transition: all .4s;
+    margin-bottom: 8px;
+}
+.profile-nav-links:first-child{
+    border-top: 1px solid rgba(162, 206, 111, 0.43);
+}
+.profile-nav-links:hover{
+    background: rgb(162, 206, 111);
+    color: white;
+    border-radius: 8px;
+}
+.card-body, .card-header{
+    padding: 25px;
+}
+.form-phone-mask{
+    border: none;
+}
+.form-phone-mask:active,
+.form-phone-mask:focus,
+.form-phone-mask:hover{
+    border: none;
 }
