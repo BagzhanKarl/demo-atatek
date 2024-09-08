@@ -21,20 +21,15 @@ if(isset($data['save'])){
         if (in_array($fileExtension, $allowedExtensions)) {
             list($width, $height) = getimagesize($fileTmpPath);
 
-            // Проверка на размер 43x43
-            if ($width == $height) {
-                $uploadDir = "../images/icons";
-                $destination = $uploadDir . $person->item_id . '.' . $fileExtension;
+            $uploadDir = "../images/icons";
+            $destination = $uploadDir . $person->item_id . '.' . $fileExtension;
 
-                // Сохранение файла
-                if (move_uploaded_file($fileTmpPath, $destination)) {
-                    $person->icon_path = $destination;  // Сохраняем путь к изображению в объекте
-                    echo "Иконка успешно загружена.";
-                } else {
-                    echo "Ошибка при загрузке иконки.";
-                }
+            // Сохранение файла
+            if (move_uploaded_file($fileTmpPath, $destination)) {
+                $person->icon_path = $destination;  // Сохраняем путь к изображению в объекте
+                echo "Иконка успешно загружена.";
             } else {
-                echo "Изображение должно быть квадратным.";
+                echo "Ошибка при загрузке иконки.";
             }
         } else {
             echo "Неподдерживаемый формат файла. Разрешены только jpg, jpeg и png.";
