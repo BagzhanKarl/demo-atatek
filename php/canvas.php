@@ -3,6 +3,12 @@ require "db.php";
 $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
 $tree = R::findOne('tree', 'item_id = ?', [$_POST['id']]);
 $info = R::findOne('info', 'item_id = ?', [$_POST['id']]);
+
+$fullPath = $tree->icon_path; // Полный путь
+
+// Удаляем начальную часть пути
+$relativePath = str_replace('/var/www/front-atatek/', '', $fullPath);
+
 ?>
 <div class="mb-2 d-flex justify-content-between align-items-center">
     <div class="text-block">
@@ -24,7 +30,7 @@ $info = R::findOne('info', 'item_id = ?', [$_POST['id']]);
     </div>
     <div class="img-block">
         <?if($tree->icon_path):?>
-            <img src="<?= $tree->icon_path?>" width="43" height="43" alt="">
+            <img src="<?= $relativePath?>" width="43" height="43" alt="">
         <?php else: ?>
             <img src="images/flag-outline%201.png" alt="">
         <?php endif; ?>

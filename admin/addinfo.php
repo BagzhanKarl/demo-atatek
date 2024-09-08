@@ -17,15 +17,12 @@ if(isset($data['save'])){
         $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         $allowedExtensions = ['jpg', 'jpeg', 'png'];
 
-        echo '<pre>';
-        print_r($_FILES['icon']);
-        echo '</pre>';
 
         // Проверка расширения
         if (in_array($fileExtension, $allowedExtensions)) {
             list($width, $height) = getimagesize($fileTmpPath);
 
-            $uploadDir = "../images/icons";
+            $uploadDir = "/var/www/front-atatek/images/icons";
             $destination = $uploadDir . $person->item_id . '.' . $fileExtension;
 
             // Сохранение файла
