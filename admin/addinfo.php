@@ -22,7 +22,7 @@ if(isset($data['save'])){
         if (in_array($fileExtension, $allowedExtensions)) {
             list($width, $height) = getimagesize($fileTmpPath);
 
-            $uploadDir = "/var/www/front-atatek/images/icons";
+            $uploadDir = "/var/www/front-atatek/images/icons/";
             $destination = $uploadDir . $person->item_id . '.' . $fileExtension;
 
             // Сохранение файла
