@@ -51,7 +51,7 @@ $relativePath = str_replace('/var/www/front-atatek/', '', $fullPath);
     <div class="d-flex gap-3">
         <button onclick="$('#canvasAta').hide();" class="btn btn-outline-success w-100">Түсінікті</button>
         <?php if ($user && $user->admin == 1): ?>
-            <a target="_blank" href="admin/addinfo.php?id=<?= $_POST['id'] ?>" class="btn btn-success w-100">Өзгерту</a>
+            <a target="_blank" onclick="$('#canvasAta').hide();" href="admin/addinfo.php?id=<?= $_POST['id'] ?>" class="btn btn-success w-100">Өзгерту</a>
         <?php endif; ?>
     </div>
 </div>
