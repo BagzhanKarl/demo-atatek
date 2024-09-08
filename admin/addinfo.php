@@ -45,7 +45,7 @@ if(isset($data['save'])){
         R::store($info);
     }
 
-    echo '<script>window.close()</script>';
+//    echo '<script>window.close()</script>';
 }
 
 if(isset($data['delete'])){
