@@ -46,7 +46,7 @@ if(isset($data['save'])){
         R::store($info);
     }
 
-//    echo '<script>window.close()</script>';
+    echo '<script>window.close()</script>';
 }
 
 if(isset($data['delete'])){
@@ -93,7 +93,7 @@ if(isset($data['delete'])){
                         </div>
                         <div class="mb-3">
                             <label for="">Иконка</label>
-                            <input type="file" name="icon" class="form-control" required>
+                            <input type="file" name="icon" class="form-control">
                         </div>
 
                         <div class="mb-3">
