@@ -10,7 +10,7 @@ if (is_array($data)) {
     foreach ($data as $item) {
         ?>
         <option value="<?= $item['id']?>"><?= $item['name']?></option>
-        <?
+        <?php
     }
 }
 ?>

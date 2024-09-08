@@ -1,5 +1,6 @@
 <?php
 require "../php/db.php";
+
 $person = R::findOne('tree', 'item_id = ?', [$_GET['id']]);
 $personParent = R::findOne('tree', 'item_id = ?', [$person->parent_id]);
 
@@ -8,7 +9,40 @@ if(isset($data['save'])){
     $person->name = $data['name'];
     $person->birth_year = $data['birth_year'];
     $person->death_year = $data['death_year'];
-    R::store($person);
+
+    // Проверяем и сохраняем изображение
+    if (isset($_FILES['icon']) && $_FILES['icon']['error'] == 0) {
+        $fileTmpPath = $_FILES['icon']['tmp_name'];
+        $fileName = $_FILES['icon']['name'];
+        $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        $allowedExtensions = ['jpg', 'jpeg', 'png'];
+
+        // Проверка расширения
+        if (in_array($fileExtension, $allowedExtensions)) {
+            list($width, $height) = getimagesize($fileTmpPath);
+
+            // Проверка на размер 43x43
+            if ($width == $height) {
+                $uploadDir = "../images/icons";
+                $destination = $uploadDir . $person->item_id . '.' . $fileExtension;
+
+                // Сохранение файла
+                if (move_uploaded_file($fileTmpPath, $destination)) {
+                    $person->icon_path = $destination;  // Сохраняем путь к изображению в объекте
+                    echo "Иконка успешно загружена.";
+                } else {
+                    echo "Ошибка при загрузке иконки.";
+                }
+            } else {
+                echo "Изображение должно быть квадратным.";
+            }
+        } else {
+            echo "Неподдерживаемый формат файла. Разрешены только jpg, jpeg и png.";
+        }
+    }
+
+    R::store($person); // Сохраняем изменения в объекте person
+
     if($data['text'] != ''){
         $info = R::dispense('info');
         $info->item_id = $person->item_id;
@@ -18,11 +52,13 @@ if(isset($data['save'])){
 
     echo '<script>window.close()</script>';
 }
+
 if(isset($data['delete'])){
     R::trash($person);
     echo '<script>window.close()</script>';
 }
 ?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -39,11 +75,12 @@ if(isset($data['delete'])){
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="" method="POST">
+                    <form action="" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="">Есімі:</label>
-                            <input type="text" value="<?= $person->name?>" name="name" class="form-control">
+                            <input type="text" value="<?= $person->name?>" name="name" required class="form-control">
                         </div>
+                        
                         <div class="mb-3 row">
                             <div class="col">
                                 <label for="">Туған жылы</label>
@@ -58,6 +95,11 @@ if(isset($data['delete'])){
                             <label for="">Әкесі:</label>
                             <input type="text" value="<?= $personParent->name?>" readonly class="form-control">
                         </div>
+                        <div class="mb-3">
+                            <label for="">Иконка</label>
+                            <input type="file" name="icon" class="form-control" required>
+                        </div>
+
                         <div class="mb-3">
                             <label for=""><?= $person->name?> туралы ақпарат</label>
                             <textarea name="text" id="" cols="30" rows="10" class="form-control"></textarea>

@@ -23,7 +23,11 @@ $info = R::findOne('info', 'item_id = ?', [$_POST['id']]);
         <?php endif; ?>
     </div>
     <div class="img-block">
-        <img src="images/flag-outline%201.png" alt="">
+        <?if($tree->icon_path):?>
+            <img src="<?= $tree->icon_path?>" width="43" height="43" alt="">
+        <?php else: ?>
+            <img src="images/flag-outline%201.png" alt="">
+        <?php endif; ?>
     </div>
 </div>
 
