@@ -7,7 +7,7 @@ $error = '';
 
 if(isset($data['signup'])){
     $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
-    $user->persontype = $data['type'];
+    $user->ru = $data['type'];
     $user->updated_at = time();
     R::store($user);
 
@@ -45,7 +45,8 @@ if(isset($data['signup'])){
                 <h2 class="mb-4">Тіркелу</h2>
                 <?= $error?>
                 <div class="row abm-standart">
-                    <div class="col">
+                    <div class="col text-start">
+                        <label for="">Жүз:</label>
                         <select name="" id="step1" class="form-control">
                             <option value="">Таңдаңыз</option>
                             <option value="1">Ұлы жүз</option>
@@ -54,18 +55,24 @@ if(isset($data['signup'])){
                             <option value="4">Жүзден тыс</option>
                         </select>
                     </div>
-                    <div class="col">
-                        <select name="" id="step2" class="form-control"></select>
+                </div>
+                <div class="abm-standart text-start">
+                    <label for="">Жүздің ішінде:</label>
+                    <select name="" id="step2" class="form-control"></select>
+                </div>
+                <div class="abm-standart text-start">
+                    <label for="">Руыңыз:</label>
+                    <input type="text" id="name-search" class="form-control">
+                </div>
+                <div class="mt-3" id="resSub" style="display: none">
+                    <select name="type" id="results" class="form-control"></select>
+
+                    <div class="mt-3">
+                        <button name="signup" class="btn btn-primary w-100">Жалғастыру</button>
                     </div>
                 </div>
-                <div class="abm-standart">
-                    <select name="" id="step3" class="form-control"></select>
-                </div>
-                <div class="abm-standart">
-                    <select name="type" id="step4" class="form-control"></select>
-                </div>
                 <div>
-                    <button name="signup" class="btn btn-primary w-100">Жалғастыру</button>
+                    <button id="searchBtn" type="button" class="btn btn-primary w-100">Іздеу</button>
                 </div>
 
             </form>
@@ -88,6 +95,8 @@ if(isset($data['signup'])){
             $('#loader').hide();
         })
         $('#step1').on('change', function(){
+            $('#resSub').hide();
+            $('#searchBtn').show();
             $('#loader').show();
             $.ajax({
                 url: '../../php/api/step1.php',
@@ -102,36 +111,28 @@ if(isset($data['signup'])){
                 }
             })
         })
-        $('#step2').on('change', function(){
+        $('#searchBtn').on('click', function(){
+
             $('#loader').show();
             $.ajax({
-                url: '../../php/api/step2.php',
+                url: '../../php/api/search.php',
                 method: 'POST',
                 data: {
-                    id: $(this).val()
+                    name: $('#name-search').val(),
+                    start: $('#step1').val(),
+                    secondid: $('#step2').val()
                 },
                 success: function(options){
-                    $('#step3').html('');
-                    $('#step3').html(options);
+                    console.log(options);
+                    $('#results').html('');
+                    $('#results').html(options);
                     $('#loader').hide();
+                    $('#resSub').show();
+                    $('#searchBtn').hide();
                 }
             })
         })
-        $('#step3').on('change', function(){
-            $('#loader').show();
-            $.ajax({
-                url: '../../php/api/step3.php',
-                method: 'POST',
-                data: {
-                    id: $(this).val()
-                },
-                success: function(options){
-                    $('#step4').html('');
-                    $('#step4').html(options);
-                    $('#loader').hide();
-                }
-            })
-        })
+
     })
 </script>
 

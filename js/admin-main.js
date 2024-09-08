@@ -40,7 +40,7 @@ function strokeStyle(shape) {
         .bind('fill', theme.colors.personNodeBackground);  // Устанавливаем цвет фона
 }
 
-const genderToText = (gender) => (gender === 'M' ? 'Ақпарат' : 'Ақпарат');
+const genderToText = (gender) => (gender === 'M' ? 'Админ' : 'Админ');
 const genderToTextColor = (gender) => gender === 'M' ? theme.colors.maleBadgeText : theme.colors.femaleBadgeText;
 const genderToFillColor = (gender) => gender === 'M' ? theme.colors.maleBadgeBackground : theme.colors.femaleBadgeBackground;
 const personBadge = () => {
@@ -48,8 +48,8 @@ const personBadge = () => {
     const badge = new go.Panel('Auto',
         {
             alignmentFocus: go.Spot.TopRight,
-            alignment: new go.Spot(1, 0, -25, STROKE_WIDTH - 0.5),
-            visible: false  // Сначала скрыто
+            alignment: new go.Spot(1, 0, -25, STROKE_WIDTH - 2),
+            visible: true  // Сначала скрыто
         }).add(new go.Shape({
             figure: 'RoundedRectangle', parameter1: CORNER_ROUNDNESS,
             desiredSize: new go.Size(NaN, 23.5),
@@ -78,25 +78,25 @@ const personBirthDeathTextBlock = () => new go.TextBlock(
         alignmentFocus: go.Spot.Top,
         alignment: new go.Spot(0.5, 1.12, 0, -35)
     }).bind('text', '', ({born, death}) => {
-        if (!born) return ''; return `${born} - ${death ?? ''}`;
-    })
+    if (!born) return ''; return `${born} - ${death ?? ''}`;
+})
 const personMainShape = () => new go.Shape({
-        figure: 'RoundedRectangle',
-        desiredSize: new go.Size(150, 65),
-        portId: '',
-        parameter1: CORNER_ROUNDNESS
-    }).apply(strokeStyle);
+    figure: 'RoundedRectangle',
+    desiredSize: new go.Size(150, 65),
+    portId: '',
+    parameter1: CORNER_ROUNDNESS
+}).apply(strokeStyle);
 const personNameTextBlock = () => new go.TextBlock({
-        stroke: theme.colors.personText,
-        font: theme.fonts.nameFont,
-        desiredSize: new go.Size(145, 55),
-        overflow: go.TextOverflow.Ellipsis,
-        textAlign: 'center',
-        verticalAlignment: go.Spot.Center,
-        toolTip: go.GraphObject.build('ToolTip').add(new go.TextBlock({margin: 4}).bind('text', nameProperty)),
-        alignmentFocus: go.Spot.Top,
-        alignment: new go.Spot(0.5, -0.29, 0, 25)
-    }).bind('text', nameProperty)
+    stroke: theme.colors.personText,
+    font: theme.fonts.nameFont,
+    desiredSize: new go.Size(145, 55),
+    overflow: go.TextOverflow.Ellipsis,
+    textAlign: 'center',
+    verticalAlignment: go.Spot.Center,
+    toolTip: go.GraphObject.build('ToolTip').add(new go.TextBlock({margin: 4}).bind('text', nameProperty)),
+    alignmentFocus: go.Spot.Top,
+    alignment: new go.Spot(0.5, -0.29, 0, 25)
+}).bind('text', nameProperty)
 const createNodeTemplate = () => new go.Node('Spot',
     {
         selectionAdorned: false,
@@ -122,9 +122,9 @@ const createNodeTemplate = () => new go.Node('Spot',
         personMainShape(),
         personNameTextBlock(),
         personBirthDeathTextBlock()),
-        personBadge().bind('visible', 'info', (info) => info === 'have')
+    personBadge()
 
-    );
+);
 async function fetchAndAddFamilyData(id) {
     try {
         const response = await fetch(`http://atatek.com/php/tree/get_items.php?id=${id}`);
@@ -156,16 +156,16 @@ async function fetchAndAddFamilyData(id) {
     }
 }
 const createLinkTemplate = () => new go.Link({
-        selectionAdorned: false,
-        routing: go.Routing.Orthogonal,
-        layerName: 'Background',
-        mouseEnter: onMouseEnterPart,
-        mouseLeave: onMouseLeavePart
-    }).add(new go.Shape({
-            figure: 'RoundedRectangle', parameter1: CORNER_ROUNDNESS,
-            stroke: theme.colors.link,
-            strokeWidth: 1
-        }));
+    selectionAdorned: false,
+    routing: go.Routing.Orthogonal,
+    layerName: 'Background',
+    mouseEnter: onMouseEnterPart,
+    mouseLeave: onMouseLeavePart
+}).add(new go.Shape({
+    figure: 'RoundedRectangle', parameter1: CORNER_ROUNDNESS,
+    stroke: theme.colors.link,
+    strokeWidth: 1
+}));
 let diagram;
 const initDiagram = (divId) => {
     diagram = new go.Diagram(divId, {
@@ -196,6 +196,10 @@ const initDiagram = (divId) => {
 };
 const familyData = [
     { id: 14, name: 'Алаш', gender: 'M', status: 'king', born: null, death: null, info: 'have'},
+    { id: 1, name: 'Ұлы жүз', gender: 'M', status: 'king', born: null, death: null, parent: 14, info: null },
+    { id: 2, name: 'Орта жүз', gender: 'M', status: 'king', born: null, death: null, parent: 14, info: null },
+    { id: 3, name: 'Кіші жүз', gender: 'M', status: 'king', born: null, death: null, parent: 14, info: null },
+    { id: 4, name: 'Жүзден тыс', gender: 'M', status: 'king', born: null, death: null, parent: 14, info: null },
 
 ];
 window.addEventListener('DOMContentLoaded', () => {
