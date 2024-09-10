@@ -40,7 +40,7 @@ function strokeStyle(shape) {
         .bind('fill', theme.colors.personNodeBackground);  // Устанавливаем цвет фона
 }
 
-const genderToText = (gender) => (gender === 'M' ? 'Админ' : 'Админ');
+const genderToText = (gender) => (gender === 'M' ? 'Ақпарат' : 'Ақпарат');
 const genderToTextColor = (gender) => gender === 'M' ? theme.colors.maleBadgeText : theme.colors.femaleBadgeText;
 const genderToFillColor = (gender) => gender === 'M' ? theme.colors.maleBadgeBackground : theme.colors.femaleBadgeBackground;
 const personBadge = () => {
@@ -48,7 +48,7 @@ const personBadge = () => {
     const badge = new go.Panel('Auto',
         {
             alignmentFocus: go.Spot.TopRight,
-            alignment: new go.Spot(1, 0, -25, STROKE_WIDTH - 2),
+            alignment: new go.Spot(1, 0, -25, STROKE_WIDTH - 0.5),
             visible: true  // Сначала скрыто
         }).add(new go.Shape({
             figure: 'RoundedRectangle', parameter1: CORNER_ROUNDNESS,
@@ -100,24 +100,32 @@ const personNameTextBlock = () => new go.TextBlock({
 const createNodeTemplate = () => new go.Node('Spot',
     {
         selectionAdorned: false,
-        mouseEnter: onMouseEnterPart,
-        mouseLeave: onMouseLeavePart,
+
         selectionChanged: onSelectionChange,
         movable: false,
         click: async (e, node) => {
-            if (!e.handled) {
-                if (node.isTreeExpanded) {
-                    // Скрываем детей
-                    diagram.commandHandler.collapseTree(node);
-                } else {
-                    // Загружаем данные и разворачиваем узел только после успешного добавления новых данных
-                    console.log(await fetchAndAddFamilyData(node.data.id));
-                    setTimeout(1000);
-                    diagram.updateAllTargetBindings();  // Обновляем диаграмму
+            if (node.isTreeExpanded) {
+                // Скрываем детей
+                diagram.commandHandler.collapseTree(node);
+            } else {
+                // Загружаем данные и разворачиваем узел
+                try {
+                    const result = await fetchAndAddFamilyData(node.data.id, node.data.name);
+                    console.log(result);
+                    if (result) {
+                        diagram.model.addNodeDataCollection(result);
+                        diagram.updateAllTargetBindings();  // Обновляем диаграмму
+                    }
                     diagram.commandHandler.expandTree(node);
+                } catch (error) {
+                    console.error('Error fetching family data:', error);
                 }
             }
+            if (!e.handled) {
+                e.handled = true;
+            }
         }
+
     }).add(new go.Panel('Spot').add(
         personMainShape(),
         personNameTextBlock(),
@@ -125,13 +133,12 @@ const createNodeTemplate = () => new go.Node('Spot',
     personBadge()
 
 );
-async function fetchAndAddFamilyData(id) {
+async function fetchAndAddFamilyData(id, name) {
     try {
-        const response = await fetch(`https://demo.atatek.kz/php/tree/get_items.php?id=${id}`);
+        const response = await fetch(`http://atatek.com/php/tree/get_items.php?id=${id}`);
         const result = await response.json();
 
         if (result.status) {
-            const existingIds = new Set(familyData.map(member => member.id));
             const newMembers = result.data
                 .map(member => ({
                     id: parseInt(member.id),
@@ -142,11 +149,20 @@ async function fetchAndAddFamilyData(id) {
                     death: member.death_year,
                     parent: parseInt(member.parent_id),
                     info: member.info
-                }))
-                .filter(member => !existingIds.has(member.id));
-            if (newMembers.length > 0) {
-                familyData.push(...newMembers);
-                diagram.model.addNodeDataCollection(newMembers);
+                }));
+
+            if (newMembers.length === 0) {
+                // Вызов функции, если данных нет
+                noDate(name);
+                return [];
+            }
+
+            const existingIds = new Set(familyData.map(member => member.id));
+            const filteredNewMembers = newMembers.filter(member => !existingIds.has(member.id));
+
+            if (filteredNewMembers.length > 0) {
+                familyData.push(...filteredNewMembers);
+                return filteredNewMembers;
             }
         } else {
             console.error('Error in API response');
@@ -154,7 +170,11 @@ async function fetchAndAddFamilyData(id) {
     } catch (error) {
         console.error('Fetch error:', error);
     }
+
+    return [];
 }
+
+
 const createLinkTemplate = () => new go.Link({
     selectionAdorned: false,
     routing: go.Routing.Orthogonal,
@@ -194,14 +214,6 @@ const initDiagram = (divId) => {
     diagram.scrollToRect(root.actualBounds);
 
 };
-const familyData = [
-    { id: 14, name: 'Алаш', gender: 'M', status: 'king', born: null, death: null, info: 'have'},
-    { id: 1, name: 'Ұлы жүз', gender: 'M', status: 'king', born: null, death: null, parent: 14, info: null },
-    { id: 2, name: 'Орта жүз', gender: 'M', status: 'king', born: null, death: null, parent: 14, info: null },
-    { id: 3, name: 'Кіші жүз', gender: 'M', status: 'king', born: null, death: null, parent: 14, info: null },
-    { id: 4, name: 'Жүзден тыс', gender: 'M', status: 'king', born: null, death: null, parent: 14, info: null },
-
-];
 window.addEventListener('DOMContentLoaded', () => {
     initDiagram('myDiagramDiv');
     setTimeout(() => {

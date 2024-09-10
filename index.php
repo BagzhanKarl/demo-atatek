@@ -1,6 +1,7 @@
 <?php
 require "php/db.php";
 $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
+$profile = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
 ?>
 <!doctype html>
 <html lang="ru">
@@ -20,10 +21,10 @@ $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
                 <div class="d-flex gap-5 align-items-center">
                     <div class="p-2 brand">ATATEK</div>
                     <div class="p-2 nav d-flex gap-5">
-                        <a href="" class="nav_links active">Шежіре</a>
-                        <a href="" class="nav_links">Жарты</a>
+                        <a href="index.php" class="nav_links">Шежіре</a>
+                        <a href="" class="nav_links"><?=R::findOne('tree', 'item_id = ?', [$profile->ru])->name?></a>
                         <a href="" class="nav_links">Менің әулетім</a>
-                        <a href="" class="nav_links">Жарты жаңалықтары</a>
+                        <a href="" class="nav_links"><?=R::findOne('tree', 'item_id = ?', [$profile->ru])->name?> жаңалықтары</a>
                         <a href="" class="nav_links">Статистика</a>
                     </div>
                     <div class="ms-auto p-2">
@@ -35,8 +36,22 @@ $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
             </div>
         </div>
     </div>
+
     <div id="sample">
         <div id="myDiagramDiv" class="samplepage"></div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 start-0 p-3">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">ATATEK</strong>
+                <small>Қазір</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="usernameinfo">
+                Бұл адамның балалары туралы ақпарат жоқ!
+            </div>
+        </div>
     </div>
     <div class="canvas" id="canvasAta" style="display: none">
         <div class="block h-100">
@@ -65,13 +80,25 @@ $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
             })
             console.log(infoid);
         }
+        const familyData = [
+            { id: 14, name: 'Алаш', gender: 'M', status: 'king', born: null, death: null, info: 'have'},
+        ];
+
+        function noDate(name){
+            const toastLiveExample = document.getElementById('liveToast')
+            const toast = new bootstrap.Toast(toastLiveExample)
+            $('#usernameinfo').text(name + '! Бұл адамның балалары туралы ақпарат жоқ!')
+            toast.show()
+            setTimeout(() => {
+                toast.hide()
+            }, 5000)
+        }
 
     </script>
     <?php if($user->admin == 0):?>
-        <script src="js/main.js?v=7"></script>
+        <script src="js/main.js?v=10"></script>
     <?php else:?>
-        <script src="js/admin-main.js?v=<?=time()?>"></script>
-
+        <script src="js/admin-main.js?v=10"></script>
     <?php endif;?>
 
 </body>

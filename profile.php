@@ -1,9 +1,6 @@
 <?php
 require "php/db.php";
-if(!$_GET['id']){
-    header('Location: profile.php?id=' . $_SESSION['user_id']);
-}
-$profile = R::findOne('users', 'id = ?', [$_GET['id']]);
+$profile = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
 ?>
 <!doctype html>
 <html lang="ru">
@@ -36,14 +33,16 @@ $profile = R::findOne('users', 'id = ?', [$_GET['id']]);
             <div class="d-flex gap-5 align-items-center">
                 <div class="p-2 brand">ATATEK</div>
                 <div class="p-2 nav d-flex gap-5">
-                    <a href="" class="nav_links">Шежіре</a>
-                    <a href="" class="nav_links">Жарты</a>
+                    <a href="index.php" class="nav_links">Шежіре</a>
+                    <a href="" class="nav_links"><?=R::findOne('tree', 'item_id = ?', [$profile->ru])->name?></a>
                     <a href="" class="nav_links">Менің әулетім</a>
-                    <a href="" class="nav_links">Жарты жаңалықтары</a>
+                    <a href="" class="nav_links"><?=R::findOne('tree', 'item_id = ?', [$profile->ru])->name?> жаңалықтары</a>
                     <a href="" class="nav_links">Статистика</a>
                 </div>
                 <div class="ms-auto p-2">
-                    <img src="images/avatar.png" width="55" alt="">
+                    <a href="profile.php">
+                        <img src="images/avatar.png" width="55" alt="">
+                    </a>
                 </div>
             </div>
         </div>
@@ -63,8 +62,9 @@ $profile = R::findOne('users', 'id = ?', [$_GET['id']]);
                         </div>
                         <hr>
                         <div class="profile-navs mt-4 d-flex flex-column">
-                            <a class="profile-nav-links" data-tab="home">Басты</a>
-                            <a class="profile-nav-links" data-tab="form">Өзгерту</a>
+                            <a class="profile-nav-links switch" data-tab="home">Басты мәліметтер</a>
+                            <a class="profile-nav-links switch" data-tab="form">Мәліметтерді ауыстыру</a>
+                            <a href="auth/next/index.php?back=<?= urlencode('http://' . $_SERVER['HTTP_HOST']  . $_SERVER['REQUEST_URI'])?>" class="profile-nav-links" data-tab="ruedit">Руды ауыстыру</a>
                             <a class="profile-nav-links" data-tab="pass">Құпия сөзді өзгерту</a>
                         </div>
                     </div>
@@ -80,7 +80,7 @@ $profile = R::findOne('users', 'id = ?', [$_GET['id']]);
                         </div>
                         <div class="d-inline-flex align-items-center justify-content-between w-100">
                             <p class="mb-0 text-muted me-1">Ру</p>
-                            <p class="mb-0"></p>
+                            <p class="mb-0"><?=R::findOne('tree', 'item_id = ?', [$profile->ru])->name?></p>
                         </div>
                     </div>
                 </div>
@@ -111,26 +111,15 @@ $profile = R::findOne('users', 'id = ?', [$_GET['id']]);
                                 </li>
                                 <li class="list-group-item px-0">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <p class="mb-1 text-muted">Қала / Ауыл</p>
                                             <p class="mb-0"><?= $profile->city?></p>
                                         </div>
-                                        <div class="col-md-4">
-                                            <p class="mb-1 text-muted">Көше</p>
-                                            <p class="mb-0"><?= $profile->street?></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <p class="mb-1 text-muted">Үй</p>
-                                            <p class="mb-0"><?= $profile->home?></p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item px-0">
-                                    <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <p class="mb-1 text-muted">Телефон номер</p>
                                             <p class="mb-0"><input type="text" class="form-phone-mask" readonly id="phone-mask" value="<?= $profile->phone?>"></p>
                                         </div>
+
                                     </div>
                                 </li>
                             </ul>
@@ -160,29 +149,13 @@ $profile = R::findOne('users', 'id = ?', [$_GET['id']]);
                                 </li>
                                 <li class="list-group-item px-0">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <p class="mb-1 text-muted">Қала / Ауыл</p>
                                             <p class="mb-0">
                                                 <input type="text" class="form-control" value="<?= $profile->city?>" name="city">
                                             </p>
                                         </div>
-                                        <div class="col-md-4">
-                                            <p class="mb-1 text-muted">Көше</p>
-                                            <p class="mb-0">
-                                                <input type="text" class="form-control" value="<?= $profile->street?>" name="street">
-
-                                            </p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <p class="mb-1 text-muted">Үй</p>
-                                            <input type="text" class="form-control" value="<?= $profile->home?>" name="home">
-                                            <p class="mb-0"></p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item px-0">
-                                    <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <p class="mb-1 text-muted">Телефон номер</p>
                                             <p class="mb-0">
                                                 <input type="text" class="form-control" id='second-mask' value="<?= $profile->phone?>" readonly>
@@ -191,6 +164,7 @@ $profile = R::findOne('users', 'id = ?', [$_GET['id']]);
 
                                     </div>
                                 </li>
+
                                 <li class="list-group-item px-0 text-end">
                                     <button class="btn btn-success">Өзгерту</button>
                                 </li>
@@ -201,7 +175,36 @@ $profile = R::findOne('users', 'id = ?', [$_GET['id']]);
                 <div class="card">
                     <div class="card-header">
                         <h5 class="m-0 p-0">Ру</h5>
-                        <div class="card-body"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="tree-data" style="font-weight: 600; font-size: 18px">
+                            <?php
+
+                            $treeData = [];
+                            $child = R::findOne('tree', 'item_id = ?', [$profile->ru]);
+
+                            while ($child) {
+                                $treeData[] = $child->name;
+
+                                // Проверяем, есть ли родитель
+                                if ($child->parent_id == null) {
+                                    break;
+                                }
+
+                                // Получаем родителя
+                                $child = R::findOne('tree', 'item_id = ?', [$child->parent_id]);
+                            }
+                            $treeTrueData = array_reverse($treeData);
+                            $ancestor_count = count($treeTrueData);
+                            $current_index = 0;
+                            foreach ($treeTrueData as $key){
+                                echo $key;
+                                if (++$current_index < $ancestor_count) {
+                                    echo " &#8594; ";
+                                }
+                            }
+                            ?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -227,7 +230,7 @@ $profile = R::findOne('users', 'id = ?', [$_GET['id']]);
         }
     )
     $(document).ready(function(){
-        $('.profile-nav-links').on('click', function(){
+        $('.switch').on('click', function(){
             $('.tabs').each(function() {
                 $(this).hide();
             });

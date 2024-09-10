@@ -110,7 +110,7 @@ const createNodeTemplate = () => new go.Node('Spot',
             } else {
                 // Загружаем данные и разворачиваем узел
                 try {
-                    const result = await fetchAndAddFamilyData(node.data.id);
+                    const result = await fetchAndAddFamilyData(node.data.id, node.data.name);
                     console.log(result);
                     if (result) {
                         diagram.model.addNodeDataCollection(result);
@@ -133,13 +133,12 @@ const createNodeTemplate = () => new go.Node('Spot',
         personBadge().bind('visible', 'info', (info) => info === 'have')
 
     );
-async function fetchAndAddFamilyData(id) {
+async function fetchAndAddFamilyData(id, name) {
     try {
         const response = await fetch(`http://atatek.com/php/tree/get_items.php?id=${id}`);
         const result = await response.json();
 
         if (result.status) {
-            const existingIds = new Set(familyData.map(member => member.id));
             const newMembers = result.data
                 .map(member => ({
                     id: parseInt(member.id),
@@ -150,12 +149,20 @@ async function fetchAndAddFamilyData(id) {
                     death: member.death_year,
                     parent: parseInt(member.parent_id),
                     info: member.info
-                }))
-                .filter(member => !existingIds.has(member.id));
+                }));
 
-            if (newMembers.length > 0) {
-                familyData.push(...newMembers);
-                return newMembers;
+            if (newMembers.length === 0) {
+                // Вызов функции, если данных нет
+                noDate(name);
+                return [];
+            }
+
+            const existingIds = new Set(familyData.map(member => member.id));
+            const filteredNewMembers = newMembers.filter(member => !existingIds.has(member.id));
+
+            if (filteredNewMembers.length > 0) {
+                familyData.push(...filteredNewMembers);
+                return filteredNewMembers;
             }
         } else {
             console.error('Error in API response');
@@ -163,8 +170,10 @@ async function fetchAndAddFamilyData(id) {
     } catch (error) {
         console.error('Fetch error:', error);
     }
+
     return [];
 }
+
 
 const createLinkTemplate = () => new go.Link({
         selectionAdorned: false,
@@ -205,10 +214,6 @@ const initDiagram = (divId) => {
     diagram.scrollToRect(root.actualBounds);
 
 };
-const familyData = [
-    { id: 14, name: 'Алаш', gender: 'M', status: 'king', born: null, death: null, info: 'have'},
-
-];
 window.addEventListener('DOMContentLoaded', () => {
     initDiagram('myDiagramDiv');
     setTimeout(() => {

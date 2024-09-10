@@ -5,7 +5,7 @@ $data = $_POST;
 $errors = [];
 $error = '';
 
-if(isset($data['signup'])){
+if(isset($data['signup']) AND $data['type']){
     $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
     $user->ru = $data['type'];
     $user->juz = $data['juz'];
@@ -13,13 +13,20 @@ if(isset($data['signup'])){
     $user->updated_at = time();
     R::store($user);
 
-    $verify = R::dispense('verify');
-    $verify->user = $user;
-    $verify->code = rand(100000, 999999);
-    $verify->time = time() + 360;
-    R::store($verify);
+    echo $user->ru . " " . $data['type'];
 
-    header('Location: ../confirm');
+
+    if($_GET['back']){
+        header('Location: ' . $_GET['back']);
+    }
+    else{
+        $verify = R::dispense('verify');
+        $verify->user = $user;
+        $verify->code = rand(100000, 999999);
+        $verify->time = time() + 360;
+        R::store($verify);
+        header('Location: ../confirm');
+    }
 }
 
 ?>
@@ -71,7 +78,7 @@ if(isset($data['signup'])){
                 <div class="mt-3 text-start" id="resSub" style="display: none">
                     <label for="" class="" style="font-weight: 700" id="onru1">Руыңыз:</label>
                     <select name="type" id="results" required class="form-control">
-                        <option value=''>Таңдаңыз</option>
+
                     </select>
 
                     <div class="mt-3 text-center">
