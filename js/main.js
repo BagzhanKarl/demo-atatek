@@ -100,24 +100,32 @@ const personNameTextBlock = () => new go.TextBlock({
 const createNodeTemplate = () => new go.Node('Spot',
     {
         selectionAdorned: false,
-        mouseEnter: onMouseEnterPart,
-        mouseLeave: onMouseLeavePart,
+
         selectionChanged: onSelectionChange,
         movable: false,
         click: async (e, node) => {
-            if (!e.handled) {
-                if (node.isTreeExpanded) {
-                    // Скрываем детей
-                    diagram.commandHandler.collapseTree(node);
-                } else {
-                    // Загружаем данные и разворачиваем узел только после успешного добавления новых данных
-                    console.log(await fetchAndAddFamilyData(node.data.id));
-                    setTimeout(1000);
-                    diagram.updateAllTargetBindings();  // Обновляем диаграмму
+            if (node.isTreeExpanded) {
+                // Скрываем детей
+                diagram.commandHandler.collapseTree(node);
+            } else {
+                // Загружаем данные и разворачиваем узел
+                try {
+                    const result = await fetchAndAddFamilyData(node.data.id);
+                    console.log(result);
+                    if (result) {
+                        diagram.model.addNodeDataCollection(result);
+                        diagram.updateAllTargetBindings();  // Обновляем диаграмму
+                    }
                     diagram.commandHandler.expandTree(node);
+                } catch (error) {
+                    console.error('Error fetching family data:', error);
                 }
             }
+            if (!e.handled) {
+                e.handled = true;
+            }
         }
+
     }).add(new go.Panel('Spot').add(
         personMainShape(),
         personNameTextBlock(),
@@ -127,7 +135,7 @@ const createNodeTemplate = () => new go.Node('Spot',
     );
 async function fetchAndAddFamilyData(id) {
     try {
-        const response = await fetch(`https://demo.atatek.kz/php/tree/get_items.php?id=${id}`);
+        const response = await fetch(`http://atatek.com/php/tree/get_items.php?id=${id}`);
         const result = await response.json();
 
         if (result.status) {
@@ -144,9 +152,10 @@ async function fetchAndAddFamilyData(id) {
                     info: member.info
                 }))
                 .filter(member => !existingIds.has(member.id));
+
             if (newMembers.length > 0) {
                 familyData.push(...newMembers);
-                diagram.model.addNodeDataCollection(newMembers);
+                return newMembers;
             }
         } else {
             console.error('Error in API response');
@@ -154,7 +163,9 @@ async function fetchAndAddFamilyData(id) {
     } catch (error) {
         console.error('Fetch error:', error);
     }
+    return [];
 }
+
 const createLinkTemplate = () => new go.Link({
         selectionAdorned: false,
         routing: go.Routing.Orthogonal,

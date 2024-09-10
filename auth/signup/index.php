@@ -10,20 +10,19 @@ if(isset($data['signup'])){
     if($user){
         $errors[] = 'Бұл номермен тіркелген';
     }
-    if($data['password'] != $data['confirm_password']){
-        $errors[] = 'Құпия сөздер сәйкес келмейді';
-    }
     if(!empty($errors)){
         $error = array_shift($errors);
     }else{
         $user = R::dispense('users');
-        $user->created_at = time();
-        $user->updated_at = time();
-        $user->role = 1;
         $user->phone = $phone;
         $user->password = password_hash($data['password'], PASSWORD_DEFAULT);
         $user->name = $data['name'];
         $user->surname = $data['surname'];
+        $user->city = $data['city'];
+
+        $user->created_at = time();
+        $user->updated_at = time();
+        $user->role = 1;
 
         $user->admin = false;
         $user->verify = false;
@@ -75,10 +74,10 @@ if(isset($data['signup'])){
                 </div>
 
                 <div class="abm-standart">
-                    <input type="password" autocomplete="off" name="password" required placeholder="Құпия сөз" class="form-control">
+                    <input type="text" autocomplete="off" name="city" required placeholder="Қала / Ауыл" class="form-control">
                 </div>
                 <div class="abm-standart">
-                    <input type="password" autocomplete="off" name="confirm_password" required placeholder="Құпия сөзді қайталаңыз" class="form-control">
+                    <input type="password" autocomplete="off" name="password" required placeholder="Құпия сөз" class="form-control">
                 </div>
                 <div>
                     <button name="signup" class="btn btn-primary w-100">Жалғастыру</button>

@@ -9,7 +9,7 @@ if (is_array($data)) {
 // Сохраняем полученные данные в базе и формируем ответ
     foreach ($data as $item) {
         ?>
-        <option value="<?= $item['id']?>"><?= $item['name']?></option>
+        <option value="<?= $item['id']?>" data-name="<?= $item['name']?>"><?= $item['name']?></option>
         <?php
     }
 }

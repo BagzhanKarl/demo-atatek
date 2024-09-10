@@ -8,6 +8,8 @@ $error = '';
 if(isset($data['signup'])){
     $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
     $user->ru = $data['type'];
+    $user->juz = $data['juz'];
+    $user->onjuz = $data['onjuz'];
     $user->updated_at = time();
     R::store($user);
 
@@ -47,7 +49,7 @@ if(isset($data['signup'])){
                 <div class="row abm-standart">
                     <div class="col text-start">
                         <label for="">Жүз:</label>
-                        <select name="" id="step1" class="form-control">
+                        <select name="juz" id="step1" required class="form-control">
                             <option value="">Таңдаңыз</option>
                             <option value="1">Ұлы жүз</option>
                             <option value="2">Орта жүз</option>
@@ -58,17 +60,24 @@ if(isset($data['signup'])){
                 </div>
                 <div class="abm-standart text-start">
                     <label for="">Жүздің ішінде:</label>
-                    <select name="" id="step2" class="form-control"></select>
+                    <select name="onjuz" id="step2" required class="form-control">
+                        <option value=''>Таңдаңыз</option>
+                    </select>
                 </div>
-                <div class="abm-standart text-start">
-                    <label for="">Руыңыз:</label>
+                <div class="abm-standart text-start" id="needhide">
+                    <label for="" id="onru">Руыңыз:</label>
                     <input type="text" id="name-search" class="form-control">
                 </div>
-                <div class="mt-3" id="resSub" style="display: none">
-                    <select name="type" id="results" class="form-control"></select>
+                <div class="mt-3 text-start" id="resSub" style="display: none">
+                    <label for="" class="" style="font-weight: 700" id="onru1">Руыңыз:</label>
+                    <select name="type" id="results" required class="form-control">
+                        <option value=''>Таңдаңыз</option>
+                    </select>
 
-                    <div class="mt-3">
+                    <div class="mt-3 text-center">
                         <button name="signup" class="btn btn-primary w-100">Жалғастыру</button>
+                        <hr>
+                        <a href="">Қайта іздеу</a>
                     </div>
                 </div>
                 <div>
@@ -111,8 +120,22 @@ if(isset($data['signup'])){
                 }
             })
         })
+        $('#step2').on('change', function(){
+            var juz = $('#step2').val();
+            $.ajax({
+                url: '../../php/api/step2.php',
+                method: 'POST',
+                data: {
+                    id: juz
+                },
+                success: function (ans){
+                    console.log(ans);
+                    $('#onru').text(ans);
+                }
+            })
+        })
         $('#searchBtn').on('click', function(){
-
+            let text = $('#onru').text();
             $('#loader').show();
             $.ajax({
                 url: '../../php/api/search.php',
@@ -129,6 +152,8 @@ if(isset($data['signup'])){
                     $('#loader').hide();
                     $('#resSub').show();
                     $('#searchBtn').hide();
+                    $('#onru1').text(text);
+                    $('#needhide').hide();
                 }
             })
         })

@@ -198,6 +198,12 @@ $profile = R::findOne('users', 'id = ?', [$_GET['id']]);
                         </form>
                     </div>
                 </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="m-0 p-0">Ру</h5>
+                        <div class="card-body"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

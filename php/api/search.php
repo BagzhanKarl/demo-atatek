@@ -26,7 +26,7 @@ if (!empty($search_data)) {
         }
         $ancestor_count = count($ancestor_data);
         $current_index = 0;
-        echo "<option>Таңдаңыз</option>";
+        echo "<option value=''>Таңдаңыз</option>";
         echo "<option value='".$id."'>";
         foreach (array_reverse($ancestor_data) as $ancestor) {
             echo $ancestor['name'];
