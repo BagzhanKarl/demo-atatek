@@ -135,7 +135,7 @@ const createNodeTemplate = () => new go.Node('Spot',
     );
 async function fetchAndAddFamilyData(id, name) {
     try {
-        const response = await fetch(`http://demo.atatek.kz/php/tree/get_items.php?id=${id}`);
+        const response = await fetch(`https://demo.atatek.kz/php/tree/get_items.php?id=${id}`);
         const result = await response.json();
 
         if (result.status) {
