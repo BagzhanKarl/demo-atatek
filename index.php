@@ -22,7 +22,7 @@ $profile = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
                     <div class="p-2 brand">ATATEK</div>
                     <div class="p-2 nav d-flex gap-5">
                         <a href="index.php" class="nav_links">Шежіре</a>
-                        <a href="" class="nav_links"><?=R::findOne('tree', 'item_id = ?', [$profile->ru])->name?></a>
+                        <a href="my.php" class="nav_links"><?=R::findOne('tree', 'item_id = ?', [$profile->ru])->name?></a>
                         <a href="" class="nav_links">Менің әулетім</a>
                         <a href="" class="nav_links"><?=R::findOne('tree', 'item_id = ?', [$profile->ru])->name?> жаңалықтары</a>
                         <a href="" class="nav_links">Статистика</a>
