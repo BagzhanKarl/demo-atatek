@@ -1,5 +1,11 @@
 <?php
 require "../php/db.php";
+
+$check = R::findOne('users', 'id = ?', [$_SESSION['logged_user']]);
+if ($check->admin == false) {
+    header('location: ../');
+}
+
 $user = R::findOne('users', 'id = ?', [$_GET['id']]);
 $from = R::findOne('users', 'id = ?', [$user->fromreg]);
 $data = $_POST;

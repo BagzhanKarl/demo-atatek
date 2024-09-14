@@ -1,5 +1,11 @@
 <?php
 require "../php/db.php";
+
+$check = R::findOne('users', 'id = ?', [$_SESSION['logged_user']]);
+if ($check->admin == false) {
+    header('location: ../');
+}
+
 ?>
 <!doctype html>
 <html lang="en">
