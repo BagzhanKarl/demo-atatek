@@ -1,8 +1,12 @@
 <?php
 require "php/db.php";
+if(!R::findOne('assigns', 'user_id = ? AND page = ?', [$_SESSION['user_id'], $_SERVER['REQUEST_URI']])){
+    header('Location: noassign.php');
+}
 $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
 $profile = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
 $tree = R::findOne('tree', 'item_id = ?', [$user->ru]);
+$settings = R::findOne('settings', 'ORDER BY id DESC');
 ?>
 <!doctype html>
 <html lang="ru">
@@ -82,6 +86,33 @@ $tree = R::findOne('tree', 'item_id = ?', [$user->ru]);
     const familyData = [
         { id: <?= $tree->item_id?>, name: '<?= $tree->name?>', gender: 'M', status: 'king', born: null, death: null, info: null},
     ];
+    const theme = {
+        colors: {
+            maleBadgeBackground: '<?= $settings->maleBadgeBackground?>',
+            maleBadgeText: '<?= $settings->maleBadgeText?>',
+            civilianBorder: '<?= $settings->civilianBorder?>',
+            personText: '<?= $settings->personText?>',
+            personNodeBackground: '<?= $settings->personNodeBackground?>',
+            link: '<?= $settings->link?>'
+        },
+        fonts: {
+            badgeFont: 'bold 8px Montserrat',
+            birthDeathFont: '10px Montserrat',
+            nameFont: '800 13px Montserrat',
+        },
+        sizes: {
+            stroke: 1,
+            radius: 50,
+            nodespace: 10,
+            layerspace: 30,
+            nodeX: 150,
+            nodeY: 60,
+            textX: 145,
+            textY: 50,
+            textTop: -0.32,
+            dateTop: 1.25,
+        }
+    };
     function noDate(name){
         const toastLiveExample = document.getElementById('liveToast')
         const toast = new bootstrap.Toast(toastLiveExample)

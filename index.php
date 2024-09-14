@@ -2,6 +2,7 @@
 require "php/db.php";
 $user = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
 $profile = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
+$settings = R::findOne('settings', 'ORDER BY id DESC');
 ?>
 <!doctype html>
 <html lang="ru">
@@ -94,11 +95,39 @@ $profile = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
             }, 5000)
         }
 
+        const theme = {
+            colors: {
+                maleBadgeBackground: '<?= $settings->maleBadgeBackground?>',
+                maleBadgeText: '<?= $settings->maleBadgeText?>',
+                civilianBorder: '<?= $settings->civilianBorder?>',
+                personText: '<?= $settings->personText?>',
+                personNodeBackground: '<?= $settings->personNodeBackground?>',
+                link: '<?= $settings->link?>'
+            },
+            fonts: {
+                badgeFont: 'bold 8px Montserrat',
+                birthDeathFont: '10px Montserrat',
+                nameFont: '800 13px Montserrat',
+            },
+            sizes: {
+                stroke: 1,
+                radius: 50,
+                nodespace: 10,
+                layerspace: 30,
+                nodeX: 150,
+                nodeY: 60,
+                textX: 145,
+                textY: 50,
+                textTop: -0.32,
+                dateTop: 1.25,
+            }
+        };
+
     </script>
     <?php if($user->admin == 0):?>
-        <script src="js/main.js?v=10"></script>
+        <script src="js/main.js?v=<?= time()?>"></script>
     <?php else:?>
-        <script src="js/admin-main.js?v=10"></script>
+        <script src="js/admin-main.js?v=<?= time()?>"></script>
     <?php endif;?>
 
 </body>

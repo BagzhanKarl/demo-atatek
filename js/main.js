@@ -2,22 +2,7 @@ const nameProperty = 'name';
 const genderProperty = 'gender';
 const statusProperty = 'status';
 
-const theme = {
-    colors: {
-        maleBadgeBackground: '#A8D07A',
-        maleBadgeText: '#000000',
-        princePrincessBorder: '#666666',
-        civilianBorder: '#666666',
-        personText: '#666666',
-        personNodeBackground: 'rgba(168,208,122,0.25)',
-        link: '#666666'
-    },
-    fonts: {
-        badgeFont: 'bold 8px Montserrat',
-        birthDeathFont: '10px Montserrat',
-        nameFont: '800 13px Montserrat',
-    }
-};
+
 const onMouseEnterPart = (e, part) => part.isHighlighted = true;
 const onMouseLeavePart = (e, part) => {
     if (!part.isSelected) part.isHighlighted = false;
@@ -25,8 +10,8 @@ const onMouseLeavePart = (e, part) => {
 const onSelectionChange = (part) => {
     part.isHighlighted = part.isSelected;
 }
-const STROKE_WIDTH = 1;
-const CORNER_ROUNDNESS = 18;
+const STROKE_WIDTH = theme.sizes.stroke;
+const CORNER_ROUNDNESS = theme.sizes.radius;
 
 function strokeStyle(shape) {
     return shape
@@ -35,7 +20,7 @@ function strokeStyle(shape) {
             strokeWidth: STROKE_WIDTH
         })
         .bind('stroke', statusProperty, (status) => {
-            return status === 'king' ? theme.colors.princePrincessBorder : theme.colors.civilianBorder;
+            return status === 'king' ? theme.colors.civilianBorder : theme.colors.civilianBorder;
         })
         .bind('fill', theme.colors.personNodeBackground);  // Устанавливаем цвет фона
 }
@@ -76,26 +61,26 @@ const personBirthDeathTextBlock = () => new go.TextBlock(
         stroke: theme.colors.personText,
         font: theme.fonts.birthDeathFont,
         alignmentFocus: go.Spot.Top,
-        alignment: new go.Spot(0.5, 1.12, 0, -35)
+        alignment: new go.Spot(0.5, theme.sizes.dateTop, 0, -35)
     }).bind('text', '', ({born, death}) => {
         if (!born) return ''; return `${born} - ${death ?? ''}`;
     })
 const personMainShape = () => new go.Shape({
         figure: 'RoundedRectangle',
-        desiredSize: new go.Size(150, 65),
+        desiredSize: new go.Size(theme.sizes.nodeX, theme.sizes.nodeY),
         portId: '',
         parameter1: CORNER_ROUNDNESS
     }).apply(strokeStyle);
 const personNameTextBlock = () => new go.TextBlock({
         stroke: theme.colors.personText,
         font: theme.fonts.nameFont,
-        desiredSize: new go.Size(145, 55),
+        desiredSize: new go.Size(theme.sizes.textX, theme.sizes.textY),
         overflow: go.TextOverflow.Ellipsis,
         textAlign: 'center',
         verticalAlignment: go.Spot.Center,
         toolTip: go.GraphObject.build('ToolTip').add(new go.TextBlock({margin: 4}).bind('text', nameProperty)),
         alignmentFocus: go.Spot.Top,
-        alignment: new go.Spot(0.5, -0.29, 0, 25)
+        alignment: new go.Spot(0.5, theme.sizes.textTop, 0, 25)
     }).bind('text', nameProperty)
 const createNodeTemplate = () => new go.Node('Spot',
     {
@@ -135,7 +120,7 @@ const createNodeTemplate = () => new go.Node('Spot',
     );
 async function fetchAndAddFamilyData(id, name) {
     try {
-        const response = await fetch(`https://demo.atatek.kz/php/tree/get_items.php?id=${id}`);
+        const response = await fetch(`http://atatek.com/php/tree/get_items.php?id=${id}`);
         const result = await response.json();
 
         if (result.status) {
@@ -191,8 +176,8 @@ const initDiagram = (divId) => {
     diagram = new go.Diagram(divId, {
         layout: new go.TreeLayout({
             angle: 90,
-            nodeSpacing: 20,
-            layerSpacing: 50,
+            nodeSpacing: theme.sizes.nodespace,
+            layerSpacing: theme.sizes.layerspace,
             layerStyle: go.TreeLayout.LayerUniform,
             treeStyle: go.TreeStyle.LastParents,
             alternateAngle: 90,

@@ -97,6 +97,7 @@
     border-color: #a2ce6f;
     box-shadow: none; /* Убираем стандартную тень при клике */
 }
+
 .btn-outline-success {
     border-radius: 10px;
     border-color: #A8D07A;
@@ -117,7 +118,7 @@
     background: #556080;
     color: #ffffff;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 18px;
 }
 .btn-secondary:hover,
 .btn-secondary:focus,

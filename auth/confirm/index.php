@@ -57,6 +57,18 @@ $data = $_POST;
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2.min.css">
 <script>
+    function createTree(){
+        $.ajax({
+            url: "../../php/api/confirmTree.php",
+            method: "POST",
+            data: {
+                status: 'start',
+            },
+            success: function (response){
+                console.log('Get');
+            }
+        })
+    }
     function loadTime(){
         var timer = 60;
         var interval = setInterval(function() {
