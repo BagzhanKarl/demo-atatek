@@ -23,6 +23,18 @@ if(isset($data['save'])){
         header('Location: user.php?id=' . $_GET['id']);
     }
 }
+if(isset($data['ban'])){
+    $user->active = false;
+    $user->updated_at = time();
+    R::store($user);
+    header('Location: user.php?id='. $_GET['id']);
+}
+if(isset($data['active'])){
+    $user->active = true;
+    $user->updated_at = time();
+    R::store($user);
+    header('Location: user.php?id='. $_GET['id']);
+}
 ?>
 <!doctype html>
 <html lang="ru">
@@ -118,33 +130,44 @@ if(isset($data['save'])){
                                             ?>
                                         </select>
                                     </div>
-                                    <div class="mb-3 text-end">
+                                    <hr>
+                                    <div class="mb-3 d-flex justify-content-between">
+                                        <?php
+                                        if($user->active == false){
+                                            ?>
+                                            <button name="active" class="btn btn-dark">Разблокировать</button>
+                                            <?
+                                        }
+                                        else{
+                                            ?>
+                                            <button name="ban" class="btn btn-danger">Заблокировать</button>
+                                            <?
+                                        }
+                                        ?>
+
                                         <button name="save" class="btn btn-success">Сохранить</button>
                                     </div>
                                 </form>
                             </div>
                             <div class="col-12">
                                 <div class="d-flex gap-4">
-                                    <p class="m-2">
+                                    <p class="m-2 d-flex gap-3">
                                         <b>Дата регистраций: </b>
-                                    </p>
-                                    <p class="m-2">
                                         <?= date('d.m.Y H:i', $user->created_at)?>
                                     </p>
-                                </div>
-                                <div class="d-flex gap-4 mt-2">
-                                    <p class="m-2">
-                                        <b>Зарегистрировался по ссылке: </b>
+                                    <p class="m-2 d-flex gap-3">
+                                        <b>Последние изменение: </b>
+                                        <?= date('d.m.Y H:i', $user->updated_at)?>
                                     </p>
-                                    <p class="m-2">
+
+                                </div>
+                                <div class="d-flex gap-4">
+                                    <p class="m-2 d-flex gap-3">
+                                        <b>Зарегистрировался по ссылке: </b>
                                         <a href="user.php?id=<?= $user->fromreg?>"><?= $from->name . " " . $from->surname?></a>
                                     </p>
-                                </div>
-                                <div class="d-flex gap-4 mt-2">
-                                    <p class="m-2">
+                                    <p class="m-2 d-flex gap-3">
                                         <b>Количество человек, зарегистрировавшихся по реферальной ссылке этого человека: </b>
-                                    </p>
-                                    <p class="m-2">
                                         <?= count(R::findAll('users', 'fromreg = ?', [$user->id]))?>
                                     </p>
                                 </div>

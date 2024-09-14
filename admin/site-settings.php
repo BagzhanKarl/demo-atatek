@@ -31,7 +31,7 @@ if($check->admin == 0){
         <li class="d-flex align-items-center gap-3"><ion-icon name="home-outline"></ion-icon><a href="index.php">Главная</a></li>
         <li class="d-flex align-items-center gap-3 active"><ion-icon name="settings-outline"></ion-icon><a href="site-settings.php">Настройки сайта</a></li>
         <li class="d-flex align-items-center gap-3"><ion-icon name="people-outline"></ion-icon><a href="users.php">Пользователи</a></li>
-        <li class="d-flex align-items-center gap-3"><ion-icon name="albums-outline"></ion-icon><a href="">База данных</a></li>
+        <li class="d-flex align-items-center gap-3"><ion-icon name="albums-outline"></ion-icon><a href="sites.php">Сайты</a></li>
         <li class="d-flex align-items-center gap-3"><ion-icon name="recording-outline"></ion-icon><a href="tikets.php">Тикеты</a></li>
         <li class="d-flex align-items-center gap-3"><ion-icon name="newspaper-outline"></ion-icon><a href="subsriptions.php">Подписки</a></li>
     </ul>
@@ -68,6 +68,10 @@ if($check->admin == 0){
                                     <div class="col mb-3">
                                         <label for="princePrincessBorder" class="form-label">Обводка блока</label>
                                         <input type="color" class="form-control form-control-color" id="princePrincessBorder" name="civilianBorder" value="<?= $settings->civilianBorder?>">
+                                    </div>
+                                    <div class="col mb-3">
+                                        <label for="princePrincessBorder" class="form-label">Персон. обводка</label>
+                                        <input type="color" class="form-control form-control-color" id="princePrincessBorder" name="personBorder" value="<?= $settings->personBorder?>">
                                     </div>
                                 </div>
                                 <hr>

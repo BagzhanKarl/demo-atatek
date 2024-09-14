@@ -62,10 +62,18 @@ $profile = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
                         </div>
                         <hr>
                         <div class="profile-navs mt-4 d-flex flex-column">
+                            <?if($profile->admin == 1):?>
+                            <a href="admin/" class="profile-nav-links" data-tab="home">Админ</a>
+                            <?endif;?>
+                            <?if($profile->role == 4):?>
+                                <a href="moderator/" class="profile-nav-links" data-tab="home">Модератор</a>
+                            <?endif;?>
                             <a class="profile-nav-links switch" data-tab="home">Басты мәліметтер</a>
                             <a class="profile-nav-links switch" data-tab="form">Мәліметтерді ауыстыру</a>
                             <a href="auth/next/index.php?back=<?= urlencode('http://' . $_SERVER['HTTP_HOST']  . $_SERVER['REQUEST_URI'])?>" class="profile-nav-links" data-tab="ruedit">Руды ауыстыру</a>
                             <a class="profile-nav-links" data-tab="pass">Құпия сөзді өзгерту</a>
+                            <a href="logout.php" class="profile-nav-links" data-tab="pass">Жүйеден шығу</a>
+
                         </div>
                     </div>
                 </div>

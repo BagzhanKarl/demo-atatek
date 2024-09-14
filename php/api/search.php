@@ -1,3 +1,4 @@
+<option value=''>Таңдаңыз</option>;
 <?php
 $data = $_POST;
 $name = htmlspecialchars($data['name']);
@@ -21,12 +22,8 @@ if (!empty($search_data)) {
         if ($check[2]['id'] != $data['secondid']){
             continue;
         }
-        if(count($ancestor_data) > 8){
-            continue;
-        }
         $ancestor_count = count($ancestor_data);
         $current_index = 0;
-        echo "<option value=''>Таңдаңыз</option>";
         echo "<option value='".$id."'>";
         foreach (array_reverse($ancestor_data) as $ancestor) {
             echo $ancestor['name'];
