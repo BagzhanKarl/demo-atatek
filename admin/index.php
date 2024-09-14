@@ -1,6 +1,6 @@
 <?php
 require "../php/db.php";
-$check = R::findOne('users', 'id = ?', [$_SESSION['logged_user']]);
+$check = R::findOne('users', 'id = ?', [$_SESSION['user_id']]);
 if($check->admin == 0){
     header('location: ../');
 }
