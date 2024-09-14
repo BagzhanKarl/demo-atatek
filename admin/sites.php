@@ -6,7 +6,7 @@ if($check->admin == 0){
     header('location: ../');
 }
 
-$rootDirectory = '../sites/';
+$rootDirectory = '/var/www/sites/';
 $currentDirectory = isset($_GET['dir']) ? $_GET['dir'] : $rootDirectory;
 
 if (strpos(realpath($currentDirectory), realpath($rootDirectory)) !== 0) {
